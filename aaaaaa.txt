@@ -1,0 +1,145 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package Templates;
+
+
+import Entities.User;
+import Services.UserService;
+import java.io.IOException;
+import java.net.URL;
+import java.sql.Date;
+import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import javax.swing.JOptionPane;
+
+/**
+ * FXML Controller class
+ *
+ * @author zagho
+ */
+public class InscriptionEtapeUnController implements Initializable {
+
+    @FXML
+    private Pane left;
+    @FXML
+    private TextField tfNom;
+    @FXML
+    private TextField tfPrenom;
+    @FXML
+    private TextField tfEmail;
+    @FXML
+    private PasswordField tfPassword;
+    @FXML
+    private DatePicker tfDnaissance;
+    @FXML
+    private TextField tfAdresse;
+    @FXML
+    private TextField tfNumtel;
+    @FXML
+    private RadioButton Rpatient;
+    @FXML
+    private RadioButton Rmedecin;
+    @FXML
+    private RadioButton rdelegue;
+    @FXML
+    private RadioButton rpharmacien;
+    @FXML
+    private Pane right;
+
+    /**
+     * Initializes the controller class.
+     */
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        // TODO
+    }    
+
+    @FXML
+    private void ButtonSuivant(ActionEvent event) throws IOException {
+        UserService ms = new UserService();
+        User m = new User();
+            m.setNom(tfNom.getText());
+            m.setPrenom(tfPrenom.getText());
+            m.setEmail(tfEmail.getText());
+            m.setPassword(tfPassword.getText());
+            Date dnaissance = Date.valueOf(tfDnaissance.getValue());
+            m.setDnaissance(dnaissance);
+            m.setAdresse(tfAdresse.getText());
+            m.setNumtel(tfNumtel.getText());
+            if(Rpatient.isSelected()){
+                m.setType("patient");
+                ms.add(m);
+                 try{
+        FXMLLoader fxml=new FXMLLoader(getClass().getResource("Login.fxml"));
+        Parent root=(Parent) fxml.load();
+        Stage stage=new Stage();
+        stage.initStyle(StageStyle.DECORATED);       
+        stage.setScene(new Scene(root));
+        stage.show();
+        }
+        catch(Exception e){
+            System.out.println("cant load new window");
+        }
+                
+            }
+            else if(Rmedecin.isSelected()){
+                m.setType("medecin");
+           FXMLLoader fxml=new FXMLLoader();
+         fxml.setLocation(getClass().getResource("Medecin.fxml"));
+         Parent root;
+            root = fxml.load();
+        MedecinController controller =fxml.getController();
+        controller.initData(m);
+               Pane pane = FXMLLoader.load(getClass().getResource("Medecin.fxml"));
+              
+            PaneContent.getChildren().setAll(pane);
+               
+               
+                
+                
+            }
+            else if(rdelegue.isSelected()){
+                m.setType("delegue");
+               Pane pane = FXMLLoader.load(getClass().getResource("Delegue.fxml"));
+               Pane panee = right;  
+               left.getChildren().setAll(panee);
+               right.getChildren().setAll(pane);
+               
+                
+                
+            }
+              else if(rpharmacien.isSelected()){
+                m.setType("pharamacien");
+               Pane pane = FXMLLoader.load(getClass().getResource("Pharmacien.fxml"));
+               Pane panee = right;  
+               left.getChildren().setAll(panee);
+               right.getChildren().setAll(pane);
+               
+                
+                
+            }
+         
+            
+            
+           // ms.add(m);
+            //JOptionPane.showMessageDialog(null,"L'utilisateur a été ajouté avec succès");
+           // AfficherUser();
+    }
+    
+}
